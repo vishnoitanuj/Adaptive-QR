@@ -1,0 +1,101 @@
+import sys
+import json
+import math
+import qrcode
+import numpy as np
+from PIL import Image
+
+class QRGenerator:
+    
+    def __init__(self, json_data):
+        self.data = json_data
+        self.split_parts = 4
+    
+    def data_spliter(self):
+        data_len = len(self.data)
+        data_parts = [dict() for x in range(self.split_parts)]
+        multiplier = math.gcd(self.split_parts, data_len)*self.split_parts
+        for j in range(multiplier):
+            if j%2 == 0:
+                for i, (key, value) in enumerate(data.items()):
+                    my_dict = data_parts[i%self.split_parts]
+                    my_dict[key]=value
+                    data_parts[i%self.split_parts] = my_dict
+            else:
+                for i, (key, value) in enumerate(reversed(data.items())):
+                    my_dict = data_parts[i%self.split_parts]
+                    my_dict[key]=value
+                    data_parts[i%self.split_parts] = my_dict
+        return data_parts
+    
+    @staticmethod
+    def get_qr_image(data):
+        qr = qrcode.QRCode(version=1, box_size=10, border=1)
+        qr.add_data(data)
+        qr.make()
+        print("The shape of the QR image:", np.array(qr.get_matrix()).shape)
+        img = qr.make_image(fill_color="white", back_color="black")
+        img = img.resize((500,500))
+        return img
+
+    def make_qr(self):
+        data_parts = self.data_spliter()
+        qrs = list()
+        for data in data_parts:
+            qrs.append(self.get_qr_image(data))
+        self.combine_qr(qrs)
+
+    @staticmethod
+    def combine_qr(images):
+        widths, heights = zip(*(i.size for i in images))
+        total_width = sum(widths)
+        max_height = sum(heights)
+
+        new_im = Image.new('RGB', (total_width, max_height))
+
+        x_offset = 0
+        y_offset = 0
+        new_im.paste(images[0], (x_offset,y_offset))
+        x_offset += images[0].size[0]
+        new_im.paste(images[1], (x_offset,y_offset))
+        y_offset += images[1].size[1]
+        new_im.paste(images[2], (0,y_offset))
+        # x_offset += images[2].size[0]
+        new_im.paste(images[3], (x_offset,y_offset))
+        # y_offset += images[3].size[1]
+        # for i, im in enumerate(images):
+        #     if i%2==0:
+        #         new_im.paste(im, (x_offset,y_offset))
+        #         x_offset += im.size[0]
+        #     else:
+        #         new_im.paste(im, (x_offset,y_offset))
+        #         y_offset -= im.size[1]
+
+        new_im.save('test.jpg')
+        
+
+if __name__ == '__main__':
+    with open('test.json') as json_file:
+        data = json.load(json_file)
+    ob = QRGenerator(data) 
+    ob.make_qr()       
+
+# if __name__ == '__main__':
+#     with open('test.json') as json_file:
+#         data = json.load(json_file)
+#     # print(data)
+#     data_len = len(data)
+#     dictlist = [dict() for x in range(4)]
+#     for j in range(math.gcd(4, data_len)*4):
+#         if j%2 == 0:
+#             for i, (key, value) in enumerate(data.items()):
+#                 my_dict = dictlist[i%4]
+#                 my_dict[key]=value
+#                 dictlist[i%4] = my_dict
+#         else:
+#             for i, (key, value) in enumerate(reversed(data.items())):
+#                 my_dict = dictlist[i%4]
+#                 my_dict[key]=value
+#                 dictlist[i%4] = my_dict
+#     for i in dictlist:
+#         print(i)
