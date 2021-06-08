@@ -1,4 +1,5 @@
 import sys
+import os
 import json
 import math
 import qrcode
@@ -30,7 +31,11 @@ class QRGenerator:
     
     @staticmethod
     def get_qr_image(data):
-        qr = qrcode.QRCode(version=1, box_size=10, border=1)
+        qr = qrcode.QRCode(
+            version=1, 
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10, 
+            border=1)
         qr.add_data(data)
         qr.make()
         print("The shape of the QR image:", np.array(qr.get_matrix()).shape)
@@ -65,8 +70,10 @@ class QRGenerator:
         new_im.save('test.jpg')
         
 
-# if __name__ == '__main__':
-#     with open('test.json') as json_file:
-#         data = json.load(json_file)
-#     ob = QRGenerator(data) 
-#     ob.make_qr()
+if __name__ == '__main__':
+    data_path = os.path.join('.','src','test.json')
+    print(data_path)
+    with open(data_path) as json_file:
+        data = json.load(json_file)
+    ob = QRGenerator(data) 
+    ob.make_qr()

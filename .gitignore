@@ -2,4 +2,5 @@
 Lib
 Scripts
 .vscode
+.env
 pyvenv.cfg
