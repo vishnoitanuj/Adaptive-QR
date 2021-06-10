@@ -1,19 +1,19 @@
 import os
 from flask import Flask, request, url_for
 from flask_cors import CORS
-# from flask_restx import Api
+from flask_restx import Resource, Api, reqparse
 from src.qrGenerator import QRGenerator
 
 
-# class SecureApi(Api):
-#     @property
-#     def specs_url(self):
-#         """Monkey patch for HTTPS"""
-#         scheme = 'http' if '8080' in self.base_url else 'https'
-#         return url_for(self.endpoint('specs'), _external=True, _scheme=scheme)
+class SecureApi(Api):
+    @property
+    def specs_url(self):
+        """Monkey patch for HTTPS"""
+        scheme = 'http' if '8080' in self.base_url else 'https'
+        return url_for(self.endpoint('specs'), _external=True, _scheme=scheme)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, support_credentials=True)
 
 @app.route('/makeQr', methods = ['GET', 'POST'])
 def qrMaker():
@@ -30,4 +30,4 @@ def qrMaker():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
