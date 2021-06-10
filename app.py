@@ -1,16 +1,16 @@
 import os
 from flask import Flask, request, url_for
 # from flask_cors import CORS
-from flask_restx import Api
+# from flask_restx import Api
 from src.qrGenerator import QRGenerator
 
 
-class SecureApi(Api):
-    @property
-    def specs_url(self):
-        """Monkey patch for HTTPS"""
-        scheme = 'http' if '8080' in self.base_url else 'https'
-        return url_for(self.endpoint('specs'), _external=True, _scheme=scheme)
+# class SecureApi(Api):
+#     @property
+#     def specs_url(self):
+#         """Monkey patch for HTTPS"""
+#         scheme = 'http' if '8080' in self.base_url else 'https'
+#         return url_for(self.endpoint('specs'), _external=True, _scheme=scheme)
 
 app = Flask(__name__)
 # CORS(app, support_credentials=True)
