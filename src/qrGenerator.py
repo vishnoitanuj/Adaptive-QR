@@ -42,7 +42,7 @@ class QRGenerator:
             box_size=10, 
             border=1)
         qr.add_data(data)
-        qr.make()
+        qr.make(fit=True)
         print("The shape of the QR image:", np.array(qr.get_matrix()).shape)
         img = qr.make_image(fill_color="white", back_color="black")
         img = img.resize((500,500))
@@ -58,8 +58,8 @@ class QRGenerator:
     @staticmethod
     def combine_qr(images):
         widths, heights = zip(*(i.size for i in images))
-        total_width = sum(widths)
-        max_height = sum(heights)
+        total_width = sum(widths)//2
+        max_height = sum(heights)//2
 
         new_im = Image.new('RGB', (total_width, max_height))
 
@@ -74,13 +74,12 @@ class QRGenerator:
         buffered = BytesIO()
         new_im.save(buffered, format="JPEG")
         return base64.b64encode(buffered.getvalue())
-        # new_im.save('test.jpg')
         
 
-# if __name__ == '__main__':
-#     data_path = os.path.join('.','src','test.json')
-#     print(data_path)
-#     with open(data_path) as json_file:
-#         data = json.load(json_file)
-#     ob = QRGenerator(data, 'testing123') 
-#     print(ob.make_qr())
+if __name__ == '__main__':
+    data_path = os.path.join('.','src','test.json')
+    print(data_path)
+    with open(data_path) as json_file:
+        data = json.load(json_file)
+    ob = QRGenerator(data, 'testing123') 
+    print(ob.make_qr())
