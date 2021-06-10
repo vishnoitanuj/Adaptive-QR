@@ -4,13 +4,18 @@ import json
 import math
 import qrcode
 import numpy as np
+import base64
 from PIL import Image
+from io import BytesIO
+from elastic_search import ElasticSearchUtils
 
 class QRGenerator:
     
-    def __init__(self, json_data):
+    def __init__(self, json_data, index='test-index'):
         self.data = json_data
         self.split_parts = 4
+        elastic = ElasticSearchUtils()
+        elastic.ingest_data(data=self.data, index=index)
     
     def data_spliter(self):
         data_len = len(self.data)
@@ -18,12 +23,12 @@ class QRGenerator:
         multiplier = math.gcd(self.split_parts, data_len)*self.split_parts
         for j in range(multiplier):
             if j%2 == 0:
-                for i, (key, value) in enumerate(data.items()):
+                for i, (key, value) in enumerate(self.data.items()):
                     my_dict = data_parts[i%self.split_parts]
                     my_dict[key]=value
                     data_parts[i%self.split_parts] = my_dict
             else:
-                for i, (key, value) in enumerate(reversed(data.items())):
+                for i, (key, value) in enumerate(reversed(self.data.items())):
                     my_dict = data_parts[i%self.split_parts]
                     my_dict[key]=value
                     data_parts[i%self.split_parts] = my_dict
@@ -43,12 +48,12 @@ class QRGenerator:
         img = img.resize((500,500))
         return img
 
-    def make_qr(self):
+    def make_qr(self, index='test-index'):
         data_parts = self.data_spliter()
         qrs = list()
         for data in data_parts:
             qrs.append(self.get_qr_image(data))
-        self.combine_qr(qrs)
+        return self.combine_qr(qrs)
 
     @staticmethod
     def combine_qr(images):
@@ -66,14 +71,16 @@ class QRGenerator:
         y_offset += images[1].size[1]
         new_im.paste(images[2], (0,y_offset))
         new_im.paste(images[3], (x_offset,y_offset))
-
-        new_im.save('test.jpg')
+        buffered = BytesIO()
+        new_im.save(buffered, format="JPEG")
+        return base64.b64encode(buffered.getvalue())
+        # new_im.save('test.jpg')
         
 
-if __name__ == '__main__':
-    data_path = os.path.join('.','src','test.json')
-    print(data_path)
-    with open(data_path) as json_file:
-        data = json.load(json_file)
-    ob = QRGenerator(data) 
-    ob.make_qr()
+# if __name__ == '__main__':
+#     data_path = os.path.join('.','src','test.json')
+#     print(data_path)
+#     with open(data_path) as json_file:
+#         data = json.load(json_file)
+#     ob = QRGenerator(data, 'testing123') 
+#     print(ob.make_qr())
