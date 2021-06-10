@@ -73,13 +73,14 @@ class QRGenerator:
         new_im.paste(images[3], (x_offset,y_offset))
         buffered = BytesIO()
         new_im.save(buffered, format="JPEG")
+        new_im.save('test.jpeg')
         return base64.b64encode(buffered.getvalue())
         
 
-if __name__ == '__main__':
-    data_path = os.path.join('.','src','test.json')
-    print(data_path)
-    with open(data_path) as json_file:
-        data = json.load(json_file)
-    ob = QRGenerator(data, 'testing123') 
-    print(ob.make_qr())
+# if __name__ == '__main__':
+#     data_path = os.path.join('.','src','test.json')
+#     print(data_path)
+#     with open(data_path) as json_file:
+#         data = json.load(json_file)
+#     ob = QRGenerator(data, 'testing123') 
+#     print(ob.make_qr())
