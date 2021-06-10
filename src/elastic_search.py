@@ -1,9 +1,7 @@
 import os
-from dotenv import load_dotenv
 from datetime import datetime
 from elasticsearch import Elasticsearch
 
-load_dotenv()
 es = Elasticsearch(
         cloud_id=os.environ['CLOUD_ID'],
         http_auth=(os.environ['ES_USERNAME'], os.environ['ES_PASSWORD']),
