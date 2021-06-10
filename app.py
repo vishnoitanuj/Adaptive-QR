@@ -14,7 +14,6 @@ class SecureApi(Api):
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
-PORT = int(os.getenv('PORT', 8080))
 
 @app.route('/makeQr', methods = ['GET', 'POST'])
 def qrMaker():
@@ -30,4 +29,5 @@ def qrMaker():
             return "Error Occured" 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=PORT, debug=False, threaded=True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=False)
