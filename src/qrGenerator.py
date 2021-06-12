@@ -44,7 +44,7 @@ class QRGenerator:
         qr.add_data(data)
         qr.make(fit=True)
         print("The shape of the QR image:", np.array(qr.get_matrix()).shape)
-        img = qr.make_image(fill_color="white", back_color="black")
+        img = qr.make_image(fill_color="#36393f", back_color="gray")
         img = img.resize((500,500))
         return img
 
@@ -74,13 +74,13 @@ class QRGenerator:
         buffered = BytesIO()
         new_im.save(buffered, format="JPEG")
         new_im.save('test.jpeg')
-        return base64.b64encode(buffered.getvalue())
+        # return base64.b64encode(buffered.getvalue())
         
 
-# if __name__ == '__main__':
-#     data_path = os.path.join('.','src','test.json')
-#     print(data_path)
-#     with open(data_path) as json_file:
-#         data = json.load(json_file)
-#     ob = QRGenerator(data, 'testing123') 
-#     print(ob.make_qr())
+if __name__ == '__main__':
+    data_path = os.path.join('.','src','test.json')
+    print(data_path)
+    with open(data_path) as json_file:
+        data = json.load(json_file)
+    ob = QRGenerator(data, 'testing123') 
+    print(ob.make_qr())
