@@ -57,7 +57,6 @@ class Decoder:
 
     @staticmethod
     def base64_to_image(base64Image):
-        print(base64Image)
         imgdata = base64.b64decode(base64Image)
         jpg_as_np = np.frombuffer(imgdata, dtype=np.uint8)
         image = cv2.imdecode(jpg_as_np, flags=1)
@@ -72,7 +71,7 @@ class Decoder:
         return self.es.get_data(data, self.index)
 
 if __name__ == '__main__':
-    image = cv2.imread('capture.JPG')
+    image = cv2.imread('screen.jpg')
     decode = Decoder()
     im, _, _ = decode.automatic_brightness_and_contrast(image)
     data = decode.cropQR(im)
