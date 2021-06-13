@@ -73,8 +73,8 @@ class QRGenerator:
         new_im.paste(images[3], (x_offset,y_offset))
         buffered = BytesIO()
         new_im.save(buffered, format="JPEG")
-        new_im.save('test.jpeg')
-        # return base64.b64encode(buffered.getvalue())
+        # new_im.save('test.jpeg')
+        return base64.b64encode(buffered.getvalue())
         
 
 if __name__ == '__main__':
