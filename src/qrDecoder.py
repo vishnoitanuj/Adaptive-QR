@@ -65,6 +65,8 @@ class Decoder:
         image = self.base64_to_image(base64Image)
         im, _, _ = self.automatic_brightness_and_contrast(image)
         data = self.cropQR(im)
+        if len(data)==0:
+            return None
         return self.es.get_data(data, self.index)
 
 if __name__ == '__main__':
