@@ -7,20 +7,13 @@ class Decoder:
 
     def cropQR(self, image):
         barcodes = pyzbar.decode(image)
-        cropped_qr_data = []
+        qr_data_dict = dict()
         print(len(barcodes))
         for i, barcode in enumerate(barcodes):
             (x, y, w, h) = barcode.rect
-            # crop_image = image[y:y+h, x:x+h]
-            # cv2.imwrite(str(i)+'.jpg',crop_image)
-            # cropped_qr.append(crop_image)
             barcodeData = barcode.data.decode("utf-8")
-            print(barcodeData)
-            return barcodeData
-            # barcodeType = barcode.type
-            cropped_qr_data.append(barcodeData)
-            # print(barcodeData, barcodeType)
-        return cropped_qr_data
+            qr_data_dict.update(eval(barcodeData))
+        return qr_data_dict
     
     def automatic_brightness_and_contrast(self, image, clip_hist_percent=15):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -65,13 +58,5 @@ if __name__ == '__main__':
     image = cv2.imread('test.jpeg')
     decode = Decoder()
     im, _, _ = decode.automatic_brightness_and_contrast(image)
-    # cv2.imwrite('cleared.jpg', im)
-    images = eval(decode.cropQR(im))
-    print(type(images))
-    # # print(len(images))
-    # for i, image in enumerate(images):
-    #     if image is None:
-    #         print("none")
-    #     else:
-    #         cv2.imwrite(str(i)+'.jpg', image)
-    
+    images = decode.cropQR(im)
+    print(images)
