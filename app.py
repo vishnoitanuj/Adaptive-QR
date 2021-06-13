@@ -53,4 +53,4 @@ api.add_resource(QRMaker, '/makeQr')
 api.add_resource(QRDecoder, '/decodeQr')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=PORT, debug=True, threaded=True)
+    app.run(host='0.0.0.0', port=PORT, debug=False, threaded=True)
