@@ -3,6 +3,7 @@ from flask import Flask, request, url_for
 from flask_cors import CORS
 from flask_restx import Resource, Api, reqparse
 from src.qrGenerator import QRGenerator
+from src.qrDecoder import Decoder
 
 
 class SecureApi(Api):
@@ -34,7 +35,22 @@ class QRMaker(Resource):
             print("Error = ", str(e))
             return "Error Occured" 
 
+@api.route('/decodeQr')
+class QRDecoder(Resource):
+    def post(self):
+        req_body = request.get_json(force=True)
+        qr_data = req_body['qr_str']
+        qr_index = req_body['index']
+        try:
+            qrDecoder = Decoder(qr_index)
+            data = qrDecoder.decode(qr_data)
+            return data
+        except Exception as e:
+            print("Error = ", str(e))
+            return "Error Occured" 
+
 api.add_resource(QRMaker, '/makeQr')
+api.add_resource(QRDecoder, '/decodeQr')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=PORT, debug=False, threaded=True)
+    app.run(host='0.0.0.0', port=PORT, debug=True, threaded=True)
