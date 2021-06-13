@@ -15,7 +15,7 @@ class ElasticSearchUtils:
     @staticmethod
     def ingest_data(data, index='test-company'):
         timestamp = datetime.now()
-        data['lastUpdated'] = timestamp
+        data['lastUpdated'] = timestamp.strftime('%m/%d/%Y')
         try:
             res = es.index(index=index, body=data)
             if not res['result']=='created':
