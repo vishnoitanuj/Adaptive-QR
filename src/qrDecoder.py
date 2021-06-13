@@ -56,9 +56,7 @@ class Decoder:
 
     @staticmethod
     def base64_to_image(base64Image):
-        print("idhar aya")
         imgdata = base64.b64decode(base64Image)
-        print("idhar aya2")
         jpg_as_np = np.frombuffer(imgdata, dtype=np.uint8)
         image = cv2.imdecode(jpg_as_np, flags=1)
         return image

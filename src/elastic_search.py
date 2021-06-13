@@ -27,10 +27,10 @@ class ElasticSearchUtils:
     
     @staticmethod
     def get_data(query_data, index='test-company'):
-        shouldQuery = []
-        [shouldQuery.append({'term': {k : v} }) for k,v in query_data.items()]
-        query = json.dumps({'query': {'bool': {'should': shouldQuery, "minimum_should_match": 1}}})
-        print(query)
+        mustQuery = []
+        [mustQuery.append({'match': {k : v} }) for k,v in query_data.items()]
+        query = json.dumps({'query': {'bool': {'must': mustQuery}}})
+        # print(query)
         res = es.search(
             index=index, 
             body=query
