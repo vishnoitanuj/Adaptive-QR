@@ -59,19 +59,22 @@ class Decoder:
     def base64_to_image(base64Image):
         imgdata = base64.b64decode(base64Image)
         jpg_as_np = np.frombuffer(imgdata, dtype=np.uint8)
-        image = cv2.imdecode(jpg_as_np, flags=1)
+        image = cv2.imdecode(jpg_as_np, cv2.IMREAD_COLOR)
         return image
     
     def decode(self, base64Image):
         image = self.base64_to_image(base64Image)
-        im, _, _ = self.automatic_brightness_and_contrast(image)
-        data = self.cropQR(im)
+        try:
+            image, _, _ = self.automatic_brightness_and_contrast(image)
+        except Exception as e:
+            print("Brightness error")
+        data = self.cropQR(image)
         if len(data)==0:
             return None
         return self.es.get_data(data, self.index)
 
 if __name__ == '__main__':
-    image = cv2.imread('screen.jpg')
+    image = cv2.imread('testing.jpg')
     decode = Decoder()
     im, _, _ = decode.automatic_brightness_and_contrast(image)
     data = decode.cropQR(im)

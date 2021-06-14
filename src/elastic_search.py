@@ -30,7 +30,7 @@ class ElasticSearchUtils:
         mustQuery = []
         [mustQuery.append({'match': {k : v} }) for k,v in query_data.items()]
         query = json.dumps({'query': {'bool': {'must': mustQuery}}})
-        # print(query)
+        print("Elastic Query = ",query)
         res = es.search(
             index=index, 
             body=query
@@ -38,4 +38,5 @@ class ElasticSearchUtils:
         result_data = list()
         for result in res['hits']['hits']:
             result_data.append(result['_source'])
+        print("Elastic result = ", result_data)
         return result_data
